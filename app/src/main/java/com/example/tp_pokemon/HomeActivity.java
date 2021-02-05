@@ -64,6 +64,9 @@ public class HomeActivity extends AppCompatActivity {
             Bundle bundle=new Bundle();
             bundle.putString("title",arrayList.get(i));
             bundle.putInt("gene",i+1);
+            bundle.putStringArrayList("names",getIntent().getStringArrayListExtra("names"));
+            bundle.putStringArrayList("urls",getIntent().getStringArrayListExtra("urls"));
+            bundle.putIntegerArrayList("ids",getIntent().getIntegerArrayListExtra("ids"));
             fragment.setArguments(bundle);
             adapter.addFragment(fragment,arrayList.get(i));
             fragment=new MainFragment();

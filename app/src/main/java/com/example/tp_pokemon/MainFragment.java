@@ -37,6 +37,9 @@ public class MainFragment extends Fragment {
     RecyclerView recyclerView;
     ArrayList<PokemonResponse> pokelist=new ArrayList<>();
     PokemonsAdapter adapter;
+    ArrayList<Integer> ids=new ArrayList<>();
+    ArrayList<String> names=new ArrayList<>();
+    ArrayList<String> urls=new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,91 +89,89 @@ public class MainFragment extends Fragment {
         final View view=inflater.inflate(R.layout.fragment_main, container, false);
         String sTitle=getArguments().getString("title");
         int gen=getArguments().getInt("gene");
-        recyclerView=view.findViewById(R.id.rvPokemon);
 
+        ids=getArguments().getIntegerArrayList("ids");
+        names=getArguments().getStringArrayList("names");
+        urls=getArguments().getStringArrayList("urls");
+        recyclerView=view.findViewById(R.id.rvPokemon);
+        setparams(gen);
         adapter=new PokemonsAdapter( pokelist,view.getContext());
 
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(),3));
 
         recyclerView.setAdapter(adapter);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pokeapi.co/api/v2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        PokedexAPI pokedexAPI=retrofit.create(PokedexAPI.class);
-        List<Integer> params=new ArrayList<>();
-        params=setparams(gen);
-        Call<PokeResult> call=pokedexAPI.getPokemons(params.get(0),params.get(1));
-        call.enqueue(new Callback<PokeResult>() {
-            @Override
-            public void onResponse(Call<PokeResult> call, Response<PokeResult> response) {
-                if(!response.isSuccessful()){
-                    Log.e("resp", String.valueOf(response.code()));
-                    return;
-                }
-                Log.e("resp", "success");
-                PokeResult pokemonResult=response.body();
-                parseArray(pokemonResult,view);
-            }
 
-            @Override
-            public void onFailure(Call<PokeResult> call, Throwable t) {
-
-            }
-
-        });
         return view;
     }
 
-    private List<Integer> setparams(int gen) {
+    private void setparams(int gen) {
         List<Integer> params=new ArrayList<>();
+        pokelist.clear();
         switch (gen){
             case 1:
-                params.add(0);
-                params.add(151);
+                for(int i=0;i<151;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 2:
-                params.add(151);
-                params.add(100);
+                for(int i=151;i<251;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 3:
-                params.add(251);
-                params.add(135);
+                for(int i=251;i<386;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 4:
-                params.add(386);
-                params.add(107);
+                for(int i=386;i<493;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 5:
-                params.add(493);
-                params.add(156);
+                for(int i=493;i<649;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 6:
-                params.add(649);
-                params.add(72);
+                for(int i=649;i<721;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 7:
-                params.add(721);
-                params.add(88);
+                for(int i=721;i<809;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
             case 8:
-                params.add(809);
-                params.add(89);
+                for(int i=809;i<898;i++){
+                    PokemonResponse pokemonResponse=new PokemonResponse();
+                    pokemonResponse.setName(names.get(i));
+                    pokemonResponse.setUrl(urls.get(i));
+                    pokelist.add(pokemonResponse);
+                }
                 break;
-        }
-        return params;
-    }
-
-    private void parseArray(PokeResult pokemonResult, View view) {
-        pokelist.clear();
-        List<PokemonResponse> pokemons=pokemonResult.getPokemonList();
-        for(int i=0;i<pokemons.size();i++){
-            PokemonResponse pokemon=new PokemonResponse();
-            pokemon.setName(pokemons.get(i).getName());
-            pokemon.setUrl(pokemons.get(i).getUrl());
-            pokelist.add(pokemon);
-            adapter=new PokemonsAdapter(pokelist,view.getContext());
-            recyclerView.setAdapter(adapter);
         }
     }
 }
